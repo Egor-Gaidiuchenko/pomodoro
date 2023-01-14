@@ -1,0 +1,41 @@
+$indicatorHeight: 65px;
+$indicatorItemHeight: 50px;
+
+$phone: 425px;
+
+.indicator {
+    width: 370px;
+    height: $indicatorHeight;
+    border-radius: calc($indicatorHeight / 2);
+    background-color: #151932;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    padding: 7px;
+}
+
+.indicator__item {
+    width: 100%;
+    height: $indicatorItemHeight;
+    border-radius: calc($indicatorItemHeight / 2);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: rgba($color: #fff, $alpha: 0.5);
+
+}
+.indicator__item--active {
+    background-color: #f87070;
+    color: rgba($color: #151932, $alpha: 1);
+}
+
+@media screen and (max-width: $phone) {
+    .indicator {
+        width: 300px;
+    }
+}

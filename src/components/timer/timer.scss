@@ -1,7 +1,115 @@
+$phone: 425px;
+
 .timer {
     height: 400px;
     width: 400px;
     border-radius: 50%;
-    background-color: #151932;
+    background-image: linear-gradient(to bottom right, #151932, #292d52);
     box-shadow: 0 0 100px rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.svg {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    transform: rotate(270deg);
+}
+
+.timer__body {
+    width: 340px;
+    height: 340px;
+    fill: transparent;
+    stroke: #f87070; 
+    stroke-width: 12px; 
+    stroke-linecap: round;
+    stroke-dasharray: calc(2 * 3.1415 * 170);
+    stroke-dashoffset: calc(2 * 3.1415 * 170);
+}
+
+.timer__body--active {
+    transition: all 5s ease-in-out;
+    stroke-dashoffset: calc(2 * 3.1415 * 0);
+}
+
+.timer__clock {
+    width: 334px;
+    height: 334px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    font-weight: 700;
+    color: rgba($color: #fff, $alpha: 0.7);
+    position: relative;
+    background-color: #151932;
+}
+
+
+.timer__button {
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    height: 100%;
+    color: rgba($color: #fff, $alpha: 0.7);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    align-items: center;
+    padding-bottom: 55px;
+}
+
+@media screen and (max-width: 425px) {
+    .timer {
+        height: 300px;
+        width: 300px;
+    }
+
+    .timer__clock {
+        width: 258px;
+        height: 258px;
+    }
+
+    .timer__button {
+        padding-bottom: 35px;
+    }
+}
+
+.timer__settings {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    background-image: linear-gradient(to bottom right, #151932, #292d52);
+    z-index: 1;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer__settings-item {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    height: 30px;
+    color: white;
+    background-color: transparent;  
+    margin: 10px 0;
+}
+
+.timer__settings-input {
+    width: 50px;
+    background-color: #fff;
 }
