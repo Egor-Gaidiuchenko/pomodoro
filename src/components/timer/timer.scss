@@ -31,8 +31,8 @@ $phone: 425px;
 }
 
 .timer__body--active {
-    transition: all 5s ease-in-out;
-    stroke-dashoffset: calc(2 * 3.1415 * 0);
+    transition: all 1s linear;
+    stroke-dashoffset: calc(2 * 3.1415 * 170);
 }
 
 .timer__clock {
