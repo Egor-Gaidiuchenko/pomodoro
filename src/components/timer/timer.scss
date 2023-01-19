@@ -64,6 +64,7 @@ $phone: 425px;
     letter-spacing: 10px;
     text-transform: uppercase;
     border: none;
+    outline: none;
     border-radius: 50%;
     background-color: transparent;
     align-items: center;
@@ -93,7 +94,7 @@ $phone: 425px;
     background-image: linear-gradient(to bottom right, #151932, #292d52);
     z-index: 1;
     position: absolute;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -112,4 +113,8 @@ $phone: 425px;
 .timer__settings-input {
     width: 50px;
     background-color: #fff;
+}
+
+.timer__settings--hidden {
+    display: none;
 }

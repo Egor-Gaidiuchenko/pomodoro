@@ -10,11 +10,11 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            workTime: 1,
-            shortBreak: 1,
-            longBreak: 2,
-            circles: 2,
-            sets: 1
+            workTime: 20,
+            shortBreak: 5,
+            longBreak: 10,
+            circles: 5,
+            sets: 3
         }
     }
 
@@ -23,6 +23,30 @@ export default class App extends Component {
             active: interval
         }))
     }
+
+    onChange = (e) => {
+        if (e.target.id === "work") {
+            this.setState(() => ({
+                workTime: +e.target.value
+            }))
+        } else if (e.target.id === "long") {
+            this.setState(() => ({
+                longBreak: +e.target.value
+            }))
+        } else if (e.target.id === "short") {
+            this.setState(() => ({
+                shortBreak: +e.target.value
+            }))
+        } else if (e.target.id === "circles") {
+            this.setState(() => ({
+                circles: +e.target.value
+            }))
+        } else if (e.target.id === "sets") {
+            this.setState(() => ({
+                sets: +e.target.value
+            }))
+        } 
+    } 
 
     render() {
         const {workTime, shortBreak, longBreak, circles, sets, active} = this.state
@@ -40,6 +64,7 @@ export default class App extends Component {
                     circles={circles}
                     sets={sets}
                     onChangeActiveInterval={this.onChangeActiveInterval}
+                    onChange={this.onChange}
                 />
                 <Settings/>
             </div>

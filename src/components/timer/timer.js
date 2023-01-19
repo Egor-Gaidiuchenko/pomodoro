@@ -6,17 +6,28 @@ export default class Timer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            workMinutes: 0,
-            workSeconds: '0' + 0,
+            minutesLeft: 0,
+            secondsLeft: '0' + 0,
             longBreak: this.props.longBreak,
             shortBreak: this.props.shortBreak,
             circles: this.props.circles,
             sets: this.props.sets,
-            active: false, 
+            active: true, 
             button: 'start',
             workSet: this.workSetCreator(this.props.circles, this.props.sets), 
-            item: 0
+            workSetItem: 0,
+            stageDurationMinutes: this.props.workTime
         }
+    }
+
+    timer = () => {
+        this.setState(state => ({
+            active: !state.active
+        }))
+
+        this.buttonChange()
+
+        this.setInterval(this.state.active)
     }
 
     workSetCreator (circles, sets) {
@@ -36,137 +47,139 @@ export default class Timer extends Component {
         return result
     }
 
-    timer = () => {
+    buttonChange() {
         this.setState(() => ({
-            active: !this.state.active
+            button: this.state.button === 'start' ? 'pause' : 'start'
         }))
-        
-        if (!this.state.active) {
-            this.setTimerInterval(this.state.workSet[this.state.item])
+    }
+
+    setInterval(isActive) {
+        if (isActive) {
+            let interval = setInterval(() => {
+                if (this.state.active) {
+                    clearInterval(interval)
+                } else {
+                    this.setTimer(interval)
+                }
+            }, 1000)
         }
     }
 
-    setTimerInterval(workStage) {
-        if (this.state.workMinutes === 0 && this.state.workSeconds === '00') {
-            this.setState(state => ({
-                item: ++state.item
-            }))
-    
-            this.props.onChangeActiveInterval(workStage)
-    
-            let minutes;
-
-            if (workStage === 'pomodoro') {
-                minutes = this.props.workTime
-            } else if (workStage === 'short break') {
-                minutes = this.props.shortBreak
-            } else if (workStage === 'long break') {
-                minutes = this.props.longBreak
-            }
-
-            let currentTimerCircle = Math.round(+window.getComputedStyle(document.querySelector('.timer__body')).strokeDasharray.slice(0, -2));
-            let circleStep = Math.round(currentTimerCircle / (60 * minutes))
+    setTimer(interval) {
+        if (this.setClock()) {
+            clearInterval(interval)
 
             this.setState(() => ({
-                workMinutes: minutes,
-                currentTimerCircle: currentTimerCircle,
-                circleStep: circleStep
+                minutesLeft: 0,
+                secondsLeft: '0' + 0,
+                active: true, 
+                button: 'start',
+                workSetItem: 1
             }))
-        }
 
-        let interval = setInterval(() => {
-            if (this.state.active) {
-                if (this.timerOnGoing() && this.state.workSet[this.state.item]) {
-                    clearInterval(interval)
-                    this.setTimerInterval(this.state.workSet[this.state.item])
-                }
-                this.timerCircle(this.state.currentTimerCircle, this.state.circleStep)
-            } else {
-                this.timerPause(interval)
-            }
-        }, 1000)
+            this.props.onChangeActiveInterval()
+
+            document.querySelector('.timer__body').style.strokeDashoffset = 2 * 3.1415 * 170
+        }
     }
 
-    timerOnGoing() {
-        if (+this.state.workSeconds > 10) {
+    setClock() {
+        if (this.state.minutesLeft === 0 && +this.state.secondsLeft === 0 && this.state.workSetItem === this.state.workSet.length) {
+            return true
+        }
+
+        if (this.state.minutesLeft === 0 && +this.state.secondsLeft === 0 && this.state.workSetItem < this.state.workSet.length) {
+            this.setWorkStage()
+        }
+
+        if (+this.state.secondsLeft === 0) {
             this.setState(state => ({
-                workSeconds: --state.workSeconds,
-                button: 'pause'
+                secondsLeft: '59',
+                minutesLeft: --state.minutesLeft
             }))
-        } else if (+this.state.workSeconds > 0 && +this.state.workSeconds <= 10) {
+        } else if (+this.state.secondsLeft <= 10) {
             this.setState(state => ({
-                workSeconds: '0' + --state.workSeconds,
-                button: 'pause'
+                secondsLeft: '0' + --state.secondsLeft
             }))
         } else {
-            if (this.state.workMinutes > 0) {
-                this.setState(state => ({
-                    workMinutes: --state.workMinutes,
-                    workSeconds: 59,
-                    button: 'pause'
-                }))
-            } else {    
-                return true;
-            }
-        }
-    }
-
-    timerPause(interval) {
-        clearInterval(interval)
-        this.setState(() => ({
-            button: 'start'
-        }))
-    }
-
-    timerCircle(currentTimerCircle, circleStep) {
-        const circle = document.querySelector('.timer__body');
-        circle.classList.add('timer__body--active');
-
-        this.setState(() => ({
-            currentTimerCircle: currentTimerCircle -= circleStep
-        }))
-
-        if (currentTimerCircle - circleStep < 0) {
-            this.setState(() => ({
-                currentTimerCircle: Math.round(+window.getComputedStyle(document.querySelector('.timer__body')).strokeDasharray.slice(0, -2))
+            this.setState(state => ({
+                secondsLeft: `${--state.secondsLeft}`
             }))
         }
-        console.log(currentTimerCircle)
-        circle.style.strokeDashoffset = this.state.currentTimerCircle
+
+        this.setStatusBar(this.state.stageDurationMinutes, this.state.minutesLeft, this.state.secondsLeft)
+    }
+
+    setStatusBar(duration, minutes, seconds) {
+        if (minutes === 0 && +seconds === 0) {
+            minutes = duration
+        }
+
+        const statusBar = document.querySelector('.timer__body')
+        const secondsDuration = duration * 60
+        const secondsLeft = minutes * 60 + +seconds
+        const fractionLeft = secondsLeft / secondsDuration
+        
+        statusBar.style.strokeDashoffset = `${2 * 3.1415 * 170 * (fractionLeft)}`
+    }
+
+    setWorkStage() {
+        this.props.onChangeActiveInterval(this.state.workSet[this.state.workSetItem])
+
+        this.setState(state => ({
+            workSetItem: ++state.workSetItem
+        }))
+
+        if (this.state.workSet[this.state.workSetItem] === 'pomodoro') {
+            this.setState(() => ({
+                minutesLeft: this.props.workTime,
+                stageDurationMinutes: this.props.workTime
+            }))
+        } else if (this.state.workSet[this.state.workSetItem] === 'long break') {
+            this.setState(() => ({
+                minutesLeft: this.props.longBreak,
+                stageDurationMinutes: this.props.longBreak
+            }))
+        } else if (this.state.workSet[this.state.workSetItem] === 'short break') {
+            this.setState(() => ({
+                minutesLeft: this.props.shortBreak,
+                stageDurationMinutes: this.props.shortBreak
+            }))
+        }
     }
 
     render() {
-        const {workMinutes, button, workSeconds} = this.state
+        const {minutesLeft, button, secondsLeft} = this.state
 
         return (
             <div className="timer">
                 <svg className="svg" viewBox="0 0 352 352">
-                    <circle className="timer__body" cx={176} cy={176} r={170}></circle>
+                    <circle className="timer__body timer__body--active" cx={176} cy={176} r={170}></circle>
                 </svg>
                 <div className="timer__clock">
-                    {`${workMinutes}:${workSeconds}`}
+                    {`${minutesLeft}:${secondsLeft}`}
                     <button className="timer__button" onClick={this.timer}>{button}</button>
                 </div>
-                <div className="timer__settings">
+                <div className="timer__settings timer__settings--hidden">
                     <div className="timer__settings-item">
                         Work time:
-                        <input type={"number"} className="timer__settings-input" id="work"></input>
-                    </div>
-                    <div className="timer__settings-item">
-                        Long break: 
-                        <input type={"number"} className="timer__settings-input" id="long"></input>
+                        <input type={"number"} className="timer__settings-input" id="work" onChange={this.props.onChange} placeholder={this.props.workTime}></input>
                     </div>
                     <div className="timer__settings-item">
                         Short break
-                        <input type={"number"} className="timer__settings-input" id="short"></input>
+                        <input type={"number"} className="timer__settings-input" id="short" onChange={this.props.onChange} placeholder={this.props.shortBreak}></input>
+                    </div>
+                    <div className="timer__settings-item">
+                        Long break: 
+                        <input type={"number"} className="timer__settings-input" id="long" onChange={this.props.onChange} placeholder={this.props.longBreak}></input>
                     </div>
                     <div className="timer__settings-item">
                         Circles in set:
-                        <input type={"number"} className="timer__settings-input" id="circles"></input>
+                        <input type={"number"} className="timer__settings-input" id="circles" onChange={this.props.onChange} placeholder={this.props.circles}></input>
                     </div>
                     <div className="timer__settings-item">
                         Number of sets:
-                        <input type={"number"} className="timer__settings-input" id="sets"></input>
+                        <input type={"number"} className="timer__settings-input" id="sets" onChange={this.props.onChange} placeholder={this.props.sets}></input>
                     </div>
                 </div>
             </div>
