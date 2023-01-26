@@ -160,7 +160,18 @@ export default class Timer extends Component {
                     {`${minutesLeft}:${secondsLeft}`}
                     <button className="timer__button" onClick={this.timer}>{button}</button>
                 </div>
-                {settingsShowing ? <Settings/> : null}
+                {
+                    settingsShowing ? 
+                    <Settings 
+                        workTime={this.props.workTime}
+                        shortBreak={this.props.shortBreak}
+                        longBreak={this.props.longBreak}
+                        circles={this.props.circles}
+                        sets={this.props.sets}
+                        onChange={this.props.onChange}
+                    /> : 
+                    null
+                }
             </div>
         )
     }
