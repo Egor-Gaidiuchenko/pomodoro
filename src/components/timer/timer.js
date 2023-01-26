@@ -1,26 +1,25 @@
 import React, { Component } from "react";
+import Settings from "../settings/settings";
 
 import "./timer.scss";
 
 export default class Timer extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            minutesLeft: 0,
-            secondsLeft: '0' + 0,
-            longBreak: this.props.longBreak,
-            shortBreak: this.props.shortBreak,
-            circles: this.props.circles,
-            sets: this.props.sets,
-            active: true, 
-            button: 'start',
-            workSet: this.workSetCreator(this.props.circles, this.props.sets), 
-            workSetItem: 0,
-            stageDurationMinutes: this.props.workTime
-        }
+    state = {
+        minutesLeft: 0,
+        secondsLeft: '0' + 0,
+        longBreak: this.props.longBreak,
+        shortBreak: this.props.shortBreak,
+        circles: this.props.circles,
+        sets: this.props.sets,
+        active: true, 
+        button: 'start',
+        workSet: this.workSetCreator(this.props.circles, this.props.sets), 
+        workSetItem: 0,
+        stageDurationMinutes: this.props.workTime
     }
 
     timer = () => {
+        
         this.setState(state => ({
             active: !state.active
         }))
@@ -150,6 +149,7 @@ export default class Timer extends Component {
 
     render() {
         const {minutesLeft, button, secondsLeft} = this.state
+        const {settingsShowing} = this.props
 
         return (
             <div className="timer">
@@ -160,28 +160,7 @@ export default class Timer extends Component {
                     {`${minutesLeft}:${secondsLeft}`}
                     <button className="timer__button" onClick={this.timer}>{button}</button>
                 </div>
-                <div className="timer__settings timer__settings--hidden">
-                    <div className="timer__settings-item">
-                        Work time:
-                        <input type={"number"} className="timer__settings-input" id="work" onChange={this.props.onChange} placeholder={this.props.workTime}></input>
-                    </div>
-                    <div className="timer__settings-item">
-                        Short break
-                        <input type={"number"} className="timer__settings-input" id="short" onChange={this.props.onChange} placeholder={this.props.shortBreak}></input>
-                    </div>
-                    <div className="timer__settings-item">
-                        Long break: 
-                        <input type={"number"} className="timer__settings-input" id="long" onChange={this.props.onChange} placeholder={this.props.longBreak}></input>
-                    </div>
-                    <div className="timer__settings-item">
-                        Circles in set:
-                        <input type={"number"} className="timer__settings-input" id="circles" onChange={this.props.onChange} placeholder={this.props.circles}></input>
-                    </div>
-                    <div className="timer__settings-item">
-                        Number of sets:
-                        <input type={"number"} className="timer__settings-input" id="sets" onChange={this.props.onChange} placeholder={this.props.sets}></input>
-                    </div>
-                </div>
+                {settingsShowing ? <Settings/> : null}
             </div>
         )
     }

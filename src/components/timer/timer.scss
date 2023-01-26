@@ -86,35 +86,3 @@ $phone: 425px;
         padding-bottom: 35px;
     }
 }
-
-.timer__settings {
-    height: 100%;
-    width: 100%;
-    border-radius: 50%;
-    background-image: linear-gradient(to bottom right, #151932, #292d52);
-    z-index: 1;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.timer__settings-item {
-    display: flex;
-    justify-content: space-between;
-    width: 200px;
-    height: 30px;
-    color: white;
-    background-color: transparent;  
-    margin: 10px 0;
-}
-
-.timer__settings-input {
-    width: 50px;
-    background-color: #fff;
-}
-
-.timer__settings--hidden {
-    display: none;
-}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AppHeader from "../header/header";
 import Timer from "../timer/timer";
 import Indicator from "../indicator/indicator";
-import Settings from "../settings/settings";
+import ToggleSettings from "../toggleSettings/toggleSettings";
 
 import "./app.scss"
 
@@ -14,7 +14,8 @@ export default class App extends Component {
             shortBreak: 5,
             longBreak: 10,
             circles: 5,
-            sets: 3
+            sets: 3,
+            settingsShowing: false
         }
     }
 
@@ -48,8 +49,14 @@ export default class App extends Component {
         } 
     } 
 
+    toggleMenu = () => {
+        this.setState(state => ({
+            settingsShowing: !state.settingsShowing
+        }))
+    }
+
     render() {
-        const {workTime, shortBreak, longBreak, circles, sets, active} = this.state
+        const {workTime, shortBreak, longBreak, circles, sets, active, settingsShowing} = this.state
 
         return (
             <div className="app">
@@ -63,10 +70,13 @@ export default class App extends Component {
                     longBreak={longBreak}
                     circles={circles}
                     sets={sets}
+                    settingsShowing={settingsShowing}
                     onChangeActiveInterval={this.onChangeActiveInterval}
                     onChange={this.onChange}
                 />
-                <Settings/>
+                <ToggleSettings
+                    toggleMenu={this.toggleMenu}
+                />
             </div>
         )
     }
