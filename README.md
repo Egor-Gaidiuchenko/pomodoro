@@ -1,6 +1,3 @@
 Grid and flexbox markup
-Scss
-BEM
-Javascript
-React
-Class components
+
+This is my first project with React. It is made using class componenst.
