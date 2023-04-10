@@ -1,3 +1,21 @@
-#pomodoro
+# Pomodoro Timer
 
-This is my first project with React. It is made using class components. It is a pomodoro timer. You choose how long will be work session, how long will be short break between work sessions in one short break, how long will be long break between work sets and how many sets you will start.
+This is typical pomodoro timer. All time divided on sets with long break between them. There is several number of circles with short break between them in each set. You can very flexible set up this timer.
+
+### Technologies
+
+This is my first project with React. I made it using class components. I used here SCSS preprocessor to style components and also tried to follow BEM.
+
+### Features
+
+You can set work time duration, long and short breaks and also number circles and sets
+
+![Settings](https://github.com/Egor-Gaidiuchenko/pomodoro/blob/main/forReadme/screenshotSettings.png)
+
+You can pause the timer, if you need
+
+![Pause](https://github.com/Egor-Gaidiuchenko/pomodoro/blob/main/forReadme/screenshotPause.png)
+
+There is indicator around the clock showing how much time of segment are gone and also indicator above clock showing you wich part of set is now
+
+![Timer on going](https://github.com/Egor-Gaidiuchenko/pomodoro/blob/main/forReadme/screenshotOnGoing.png)
